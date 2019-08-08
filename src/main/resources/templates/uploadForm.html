@@ -1,0 +1,92 @@
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+            $("#b1").prop('disabled', true);
+
+            var i = 1;
+            var imgsrc;
+            $("#b1").click(function(){
+                i++;
+                var newID='test'+i;
+                $("ol").append("<li><input type=\"url\" name=\"file\" class=\"imgform\" value=\"Pass URL here\" id=\"testx\" readonly=\"readonly\" /></li>");
+                imgsrc = $("#test").val();
+                document.getElementById('test').value = '';
+                $("#testx").attr('id',newID).attr('value', imgsrc).fadeTo(1000, 0.4);
+                $("#b1").prop('disabled', true);
+            });
+
+            $("#test").click(function () {
+                $("#test").attr('value',null);
+            })
+
+            var j = 1;
+            $("input.imgform").on("paste", function(){
+
+                    var testImgId='testImg';
+                    setTimeout(function () {
+                        var text = $("input").val();
+                        var newElement = "<img id=\"testImg\" src=null height=\"80\" width=\"80\"/>";
+                        $("#thumb").append(newElement);
+                        $("#testImg").attr('src', text);
+
+                        j++;
+                        testImgId='testImg'+j;
+                        $("#testImg").attr("id", testImgId);
+                        $("#b1").prop('disabled', false);
+                    }, 100);
+                }
+            )
+        });
+
+    </script>
+</head>
+
+<body>
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+
+<div>
+    <form method="POST" enctype="multipart/form-data" action="/" id="imageUploadForm">
+        <table>
+            <tr>
+                <td> File to upload: </td>
+                <td>
+                    <ol>
+                        <li>
+                            <input type="url" class="imgform" name="file" id="test" value="Pass URL here" onchange="urlValidation()" />
+                        </li>
+                    </ol>
+                </td>
+
+                <td>
+                    <div id="thumb"></div>
+                </td>
+
+            </tr>
+            <tr>
+                <td><input type="button" value="Add one more file" id="b1"/></td>
+                <td><input type="submit" value="Upload" /></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div>
+    <ul>
+        <li th:each="file : ${files}">
+            <a th:href="${file}" th:text="${file}" />
+            <div>
+                <img th:src="${file}" height="120" width="120"/>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
